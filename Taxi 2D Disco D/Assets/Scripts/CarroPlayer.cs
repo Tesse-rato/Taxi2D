@@ -86,12 +86,9 @@ public class CarroPlayer : MonoBehaviour {
             };
             SalvaEstadoJogador();
         }
-            
         carroModel.CarregaEstadojogador();
         ConstroiPropriedadesCarro();
         ConstroiModelo();
-       
-
     }
 	
 	// Update is called once per frame
@@ -148,81 +145,31 @@ public class CarroPlayer : MonoBehaviour {
         estabilidade = 10000;
     }
 
-    
-//        if (!travado) // Controle antigo do carro
-//        {
-//            rbd2dcarro.freezeRotation = false;
-//            if (combustivel > 0)
-//            {
-//                combustivel -= consumo;
-//            }
-//        }
-//        else
-//        {
-//            transform.position = new Vector3(0, -3.3f, 0f);
-//transform.eulerAngles = new Vector3(0, 0, 0);
-//        }
-        
-
-//        // Algoritmo que muda eixo X pela rotacao
-//        if (transform.rotation.z< 0.75f && transform.rotation.z> -0.75f)
-//        {
-//            rbd2dcarro.velocity = new Vector2((-transform.rotation.z* forcaX) * Time.deltaTime, rbd2dcarro.velocity.y);
-//        }
-//        else
-//        {
-//            rbd2dcarro.velocity = new Vector2((transform.rotation.z* forcaX) * Time.deltaTime, rbd2dcarro.velocity.y);
-//        }
-
-//        // Algoritmo de Input do jogador eixoX
-//        if (Input.GetKey(KeyCode.RightArrow) && transform.rotation.z< 0.80f)
-//        {
-//            rbd2dcarro.angularVelocity = -dirigibilidade* Time.deltaTime;
-//        }
-//        else if (Input.GetKey(KeyCode.LeftArrow) && transform.rotation.z > -0.80f)
-//        {
-//            rbd2dcarro.angularVelocity = dirigibilidade* Time.deltaTime;
-//        }
-//        else
-//        {
-//            if (transform.rotation.z< -0.03f )
-//            {
-//                rbd2dcarro.angularVelocity = (estabilidade* Time.deltaTime);
-//            }
-//            else if (transform.rotation.z > 0.03f )
-//            {
-//                rbd2dcarro.angularVelocity = (-estabilidade* Time.deltaTime);
-//            }
-//            else if (transform.rotation.z > -0.02f && transform.rotation.z< 0.02f)
-//            {
-//                transform.eulerAngles = new Vector3(0f, 0f, 0f); //Vector3.Lerp(this.transform.eulerAngles, new Vector3(0f, 0f, 0f), Time.deltaTime);
-//            }
-//        }
-
-//        // Algortmo Input  do Jogador eixoY
-//        if (Input.GetKey(KeyCode.UpArrow) && transform.position.y< 4)
-//        {
-//            rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, forcaY* Time.deltaTime);
-//rbd2dcarro.AddRelativeForce(new Vector2(0, (forcaY* Time.deltaTime) * 1000f));
-//        }
-//        else if (Input.GetKey(KeyCode.DownArrow))
-//        {
-//            rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, (freio* Time.deltaTime) * -2);
-//        }
-//        else
-//        {
-//            rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, freio* -Time.deltaTime);
-
-//        }
-
     private void FixedUpdate()
     {
+        if (transform.position.y > 5)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        }
 
         if (!travado) // Controle antigo do carro
         {
             if (combustivel > 0)
             {
                 combustivel -= consumo;
+            }
+            else if (combustivel <= 0)
+            {
+                if (Gerenciador_GUI.instance.canvasModel.recorde < GerenciadorJogo.instance.score)
+                {
+                    Debug.Log("Recorde");
+                    Gerenciador_GUI.instance.canvasModel.recorde = GerenciadorJogo.instance.score;
+                    Gerenciador_GUI.instance.GameOver(Gerenciador_GUI.instance.canvasModel.recorde.ToString());                
+                }
+                else
+                {
+                    Gerenciador_GUI.instance.GameOver("");
+                }
             }
 
             Touch[] touchs = Input.touches;
@@ -249,6 +196,23 @@ public class CarroPlayer : MonoBehaviour {
                         viraEsquerda = true;
                     }
                 }
+            }
+
+            if (Input.GetKey(KeyCode.RightArrow) && Input.GetKey(KeyCode.LeftArrow))
+            {
+                viraDireita = false;
+                viraEsquerda = false;
+                acelerando = true;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                viraEsquerda = true;
+                viraDireita = false;
+            }
+            else if (Input.GetKey(KeyCode.RightArrow))
+            {
+                viraDireita = true;
+                viraEsquerda = false;
             }
 
         }
@@ -321,98 +285,11 @@ public class CarroPlayer : MonoBehaviour {
             }
             recorde = "";
             Gerenciador_GUI.instance.GameOver(recorde);
+            Gerenciador_GUI.instance.canvasModel.moedas = Gerenciador_GUI.instance.dinheiroAntesDoJogo;
             Debug.Log("Morreu");
         }
                 
     }
-
-    //private void FixedUpdate()
-    //{
-    //    if (!travado)
-    //    {
-    //        rbd2dcarro.freezeRotation = false;
-    //        if (combustivel > 0)
-    //        {
-    //            combustivel -= consumo;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        transform.position = new Vector3(0, -3.3f, 0f);
-    //        transform.eulerAngles = new Vector3(0, 0, 0);
-    //    }
-
-
-    //    // Algoritmo que muda eixo X pela rotacao
-    //    if (transform.rotation.z < 0.75f && transform.rotation.z > -0.75f)
-    //    {
-    //        rbd2dcarro.velocity = new Vector2((-transform.rotation.z * forcaX) * Time.deltaTime, rbd2dcarro.velocity.y);
-    //    }
-    //    else
-    //    {
-    //        rbd2dcarro.velocity = new Vector2((transform.rotation.z * forcaX) * Time.deltaTime, rbd2dcarro.velocity.y);
-    //    }
-
-
-
-
-    //    // Algoritmo de Input do jogador eixoX
-    //    if (viraDireita && !viraEsquerda && transform.rotation.z < 0.80f)
-    //    {
-    //        rbd2dcarro.angularVelocity = -dirigibilidade * Time.deltaTime;
-    //    }
-    //    else if (viraEsquerda && !viraDireita && transform.rotation.z > -0.80f)
-    //    {
-    //        rbd2dcarro.angularVelocity = dirigibilidade * Time.deltaTime;
-    //    }
-    //    else
-    //    {
-    //        if (transform.rotation.z < -0.03f)
-    //        {
-    //            rbd2dcarro.angularVelocity = (estabilidade * Time.deltaTime);
-    //        }
-    //        else if (transform.rotation.z > 0.03f)
-    //        {
-    //            rbd2dcarro.angularVelocity = (-estabilidade * Time.deltaTime);
-    //        }
-    //        else if (transform.rotation.z > -0.02f && transform.rotation.z < 0.02f)
-    //        {
-    //            transform.eulerAngles = new Vector3(0f, 0f, 0f); //Vector3.Lerp(this.transform.eulerAngles, new Vector3(0f, 0f, 0f), Time.deltaTime);
-    //        }
-    //    }
-
-
-    //    // Algortmo Input  do Jogador eixoY
-    //    if (viraEsquerda && viraDireita && transform.position.y < 4)
-    //    {
-    //        rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, forcaY * Time.deltaTime);
-    //        rbd2dcarro.AddRelativeForce(new Vector2(0, (forcaY * Time.deltaTime) * 1000f));
-    //    }
-    //    //else if (Input.GetKey(KeyCode.DownArrow))
-    //    //{
-    //    //    rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, (freio * Time.deltaTime) * -2);
-    //    //}
-    //    else
-    //    {
-    //        rbd2dcarro.velocity = new Vector2(rbd2dcarro.velocity.x, freio * -Time.deltaTime);
-
-    //    }
-
-    //    if (transform.position.y < -6 || transform.rotation.z < -0.95f || transform.rotation.z > 0.95f)
-    //    {
-    //        string recorde;
-    //        if (Gerenciador_GUI.instance.canvasModel.recorde < GerenciadorJogo.instance.score)
-    //        {
-    //            Debug.Log("Recorde");
-    //            Gerenciador_GUI.instance.canvasModel.recorde = GerenciadorJogo.instance.score;
-    //            recorde = Gerenciador_GUI.instance.canvasModel.recorde.ToString();
-    //        }
-    //        recorde = "";
-    //        Gerenciador_GUI.instance.GameOver(recorde);
-    //        Debug.Log("Morreu");
-    //    }
-
-    //}
 
 
     public class CarroModel

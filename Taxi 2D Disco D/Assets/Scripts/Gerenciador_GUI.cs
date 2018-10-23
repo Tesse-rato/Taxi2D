@@ -9,8 +9,8 @@ public class Gerenciador_GUI : MonoBehaviour {
 
     [HideInInspector]
     public static Gerenciador_GUI instance;
-
-    private float dinheiroAntesDoJogo;
+    [HideInInspector]
+    public float dinheiroAntesDoJogo;
 
     // Canvas Principal
     public CanvasModel canvasModel;
@@ -326,7 +326,7 @@ public class Gerenciador_GUI : MonoBehaviour {
         }
         txtPauseRecorde.text = "Recorde: " + canvasModel.recorde;
         txtPausePrincipal.text = "Perdeu :(";
-        canvasModel.moedas = dinheiroAntesDoJogo;
+        //canvasModel.moedas = dinheiroAntesDoJogo;
         btnResume.enabled = false;
         btnimgResume.color = new Color(0.25f,0.25f,0.25f,1);
         BotaoPause();
